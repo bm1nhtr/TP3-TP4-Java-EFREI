@@ -1,0 +1,5 @@
+# Ignore all files in TP3-TP4 folder
+TP3-TP4/**
+# But don't ignore src folder in TP3-TP4
+!TP3-TP4/src/
+!TP3-TP4/src/**
