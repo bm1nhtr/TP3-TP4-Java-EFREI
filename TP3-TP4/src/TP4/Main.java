@@ -4,10 +4,9 @@
  */
 package TP4;
 
-/**
- *
- * @author minhm
- */
+
 public class Main {
-    
+    public static void main(String[] args){
+        
+    }
 }
