@@ -100,11 +100,63 @@ git commit -m "Description des modifications"
 git push origin dev-prenom2
 ```
 
+## Comment merger une branche dans `develop` via la ligne de commande
+
+**Important :** Merger via le site web (GitHub/GitLab) peut parfois merger directement dans la branche main. Pour plus de contrôle, utilisez la ligne de commande.
+
+### Étapes pour merger une branche dans `develop`
+
+1. **S'assurer que vous êtes à jour avec le remote :**
+   ```bash
+   git fetch origin
+   ```
+
+2. **Basculer sur la branche `develop` et la mettre à jour :**
+   ```bash
+   git checkout develop
+   git pull origin develop
+   ```
+
+3. **Merger la branche de fonctionnalité dans `develop` :**
+   ```bash
+   git merge dev_minh  # ou le nom de la branche à merger
+   ```
+   
+   Si vous avez des conflits, résolvez-les puis :
+   ```bash
+   git add .
+   git commit -m "Merge dev_minh into develop"
+   ```
+
+4. **Pousser les changements vers le remote :**
+   ```bash
+   git push origin develop
+   ```
+
+5. **Optionnel : Supprimer la branche de fonctionnalité (si elle n'est plus nécessaire) :**
+   ```bash
+   git branch -d dev_maroaune  # Supprime la branche locale
+   git push origin --delete dev_maroaune  # Supprime la branche distante
+   ```
+
+### Alternative : Merger avec rebase (pour un historique plus propre)
+
+Si vous préférez un historique linéaire :
+```bash
+git checkout develop
+git pull origin develop
+git rebase dev_maroaune  # Applique les commits de dev_maroaune sur develop
+git push origin develop
+```
+
+**Note :** Le rebase réécrit l'historique, donc utilisez-le seulement si vous êtes sûr de ce que vous faites.
+
 ## Notes importantes
 
 - Toujours faire une review avant de merger
 - Communiquer en cas de doute sur les conflits
 - Utiliser `--force-with-lease` plutôt que `--force` pour plus de sécurité
+- Préférer merger via la ligne de commande pour plus de contrôle
 
 
 Minh : "Vous pouvez ajouter des instructions pour moi ici ci neccessaires"
