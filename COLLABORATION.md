@@ -233,7 +233,8 @@ git push origin dev-prenom2
 
 3. **Merger la branche de fonctionnalité dans `develop` :**
    ```bash
-   git merge dev_minh  # ou le nom de la branche à merger
+   git branch # chercher ton branch
+   git merge dev-tonbranch  # ou le nom de la branche à merger
    ```
    
    Si vous avez des conflits, résolvez-les puis :
