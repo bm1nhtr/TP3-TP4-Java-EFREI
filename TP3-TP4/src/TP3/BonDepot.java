@@ -35,8 +35,8 @@ public class BonDepot {
         this.nbArticleDeposes = nbArticleDeposes;
         this.listArticles = listArticles;
         
-        this.id = numerote;
         numerote++;
+        this.id = numerote;
     }
     
     // Getters
