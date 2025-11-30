@@ -20,20 +20,20 @@ public class LigneDepot {
     
 
     // Getters
-    public int getcodeArticle(){
+    public int getCodeArticle(){
         return this.codeArticle;
     }
     
-    public int getexemplaires(){
+    public int getExemplaires(){
         return this.exemplaires;
     }
     
     // Setters
-    public void setexemplaires(int exemplaires){
+    public void setExemplaires(int exemplaires){
         this.exemplaires = exemplaires;
     }
     
-    public void setcodeArticle(int codeArticle){
+    public void setCodeArticle(int codeArticle){
         this.codeArticle = codeArticle;
     }
 }
