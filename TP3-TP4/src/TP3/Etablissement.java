@@ -111,7 +111,7 @@ public class Etablissement {
         }
         return false; // Tableau plein
     }
-    
+
     /**
      * Question 5a : Rechercher un article par son numéro (ISBN ou ISSN)
      * @param numero Le numéro de l'article (ISBN ou ISSN)
@@ -125,5 +125,71 @@ public class Etablissement {
         }
         return null; // Article non trouvé
     }
+
+    // question 4(b) ajouter un livre, magazine ou manuel 
+    // true si l'ajout a est fait avec succès, false si le tableau est plein
+
+        //Ajouter un magazine à l'établissement
+    public boolean ajouterMagazine(String description, double prixInitial, int nbExemplaires, String issn, String periodicite, String datePublication) {
+        // Création d'un objet Magazine avec les informations fournies
+        Magazine magazine = new Magazine(description, prixInitial, nbExemplaires, issn, periodicite, datePublication);
+        // Ajout du magazine au tableau Articles via la méthode ajouterArticle
+        return ajouterArticle(magazine);
+    }
+
+        //Ajouter un livre à l'établissement
+    public boolean ajouterLivre(String description, double prixInitial, int nbExemplaires, String isbn, int nbPages) {
+        // Création d'un objet Livre avec les informations fournies
+        Livre livre = new Livre(description, prixInitial, nbExemplaires, isbn, nbPages);
+        // Ajout du livre au tableau Articles via la méthode ajouterArticle
+        return ajouterArticle(livre);
+    }
+
+        //Ajouter un manuel scolaire à l'établissement
+    public boolean ajouterManuel(String description, double prixInitial, int nbExemplaires, String isbn, int nbPages, String matiere, String niveauScolaire) {
+        // Création d'un objet ManuelScolaire avec les informations fournies
+        ManuelScolaire manuel = new ManuelScolaire(description, prixInitial, nbExemplaires, isbn, nbPages, matiere, niveauScolaire);
+        // Ajout du manuel au tableau Articles 
+        return ajouterArticle(manuel);
+    }
+
+    //QUESTION 5B
+    //Ajouter un bon de dépôt à l'établissement.
+    //Le bon est automatiquement daté et numéroté.
+    //numTel : Numéro de téléphone du client
+    //lignesDepot : Les lignes de dépôt (articles + exemplaires)
+    //true si le bon a été ajouté, false si le tableau est plein
+ 
+    public boolean ajouter(int numTel, LigneDepot[] lignesDepot) {
+
+        //On vérifie s'il reste de la place
+        if (nbBonDepots >= BonDepots.length) {
+            return false;
+        }
+
+        // La date automatique
+        LocalDate dateDepot = LocalDate.now();
+
+        // Calcul du nombre total d'articles déposés
+        int nbArticles = 0;
+        for (LigneDepot ld : lignesDepot) {
+            if (ld != null) {
+                nbArticles += ld.getExemplaires();
+            }
+        }
+
+        // Création automatique du bon (numéro automatique géré dans la classe BonDepot)
+        BonDepot bon = new BonDepot(numTel, dateDepot, nbArticles, lignesDepot);
+
+        // Ajout dans le tableau
+        BonDepots[nbBonDepots] = bon;
+        nbBonDepots++;
+
+        return true;
+    }
+
+
+
+    
 }
 

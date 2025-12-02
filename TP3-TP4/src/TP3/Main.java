@@ -186,6 +186,39 @@ public class Main {
         System.out.println();
         
         System.out.println("=== FIN DES TESTS ===");
+
+
+        // Test 8 : 5b - Utilisation des méthodes ajouterLivre, ajouterMagazine, ajouterManuel
+        System.out.println("--- Test 5b : Utilisation des méthodes d'ajout spécifiques ---");
+
+        boolean ajoutLivre2 = etablissement.ajouterLivre(
+                "Nouveau Livre Test", 12.99, 5, "ISBN-TEST-001", 150);
+        boolean ajoutMag2 = etablissement.ajouterMagazine(
+                "Magazine Test", 4.50, 8, "ISSN-TEST-001", "Hebdomadaire", "2024-12-01");
+        boolean ajoutManuel2 = etablissement.ajouterManuel(
+                "Manuel Test", 18.00, 6, "ISBN-TEST-002", 220, "Physique", "Lycée");
+
+        System.out.println("Ajout via ajouterLivre : " + ajoutLivre2);
+        System.out.println("Ajout via ajouterMagazine : " + ajoutMag2);
+        System.out.println("Ajout via ajouterManuel : " + ajoutManuel2);
+        System.out.println();
+
+
+        // Test 9: 5c - Utilisation de la méthode ajouter() pour un bon de dépôt automatique
+        System.out.println("--- Test 5c : Ajout d'un bon de dépôt automatique ---");
+
+        LigneDepot[] lignesTest = {
+                new LigneDepot(1, 2),
+                new LigneDepot(2, 1)
+        };
+
+        boolean ajoutBonAuto = etablissement.ajouter(600000000, lignesTest);
+
+        System.out.println("Ajout du bon automatique : " + ajoutBonAuto);
+        System.out.println("Nombre de bons maintenant : " + etablissement.getNbBonDepots());
+        System.out.println();
+
     }
+    
     
 }

@@ -78,5 +78,7 @@ public class BonDepot {
     public void setListArticles(LigneDepot[] listArticles) {
         this.listArticles = listArticles;
     }
+
+    
     
 }
