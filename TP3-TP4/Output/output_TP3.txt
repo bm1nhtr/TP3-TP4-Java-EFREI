@@ -1,0 +1,131 @@
+Les résultats sont également sauvegardés dans: ..\OneDrive - Efrei\S5_Java\Netbeans\TP3_TP4_BinhMinhTRAN\TP3-TP4\Output\output_TP3.txt
+
+[1;36m=== TEST DES CLASSES TP3 ===
+[0m
+[1;36m--- Test 1: Création d'articles ---[0m
+Livre créé:
+  Description: Le Petit Prince
+  Prix: 15.5€
+  Exemplaires: 10
+  ISBN: 978-2-07-061275-8
+  Pages: 96
+  Numéro (getNumero): 978-2-07-061275-8
+
+Magazine créé:
+  Description: Science & Vie
+  Prix: 5.9€
+  Exemplaires: 20
+  ISSN: ISSN-1234-5678
+  Périodicité: Mensuel
+  Date publication: 2024-01-15
+  Numéro (getNumero): ISSN-1234-5678
+
+Manuel créé:
+  Description: Mathématiques 3ème
+  Prix: 25.0€
+  Exemplaires: 15
+  ISBN: 978-2-10-123456-7
+  Pages: 320
+  Matière: Mathématiques
+  Niveau: Collège
+  Numéro (getNumero): 978-2-10-123456-7
+
+[1;36m--- Test 2: Création de LigneDepot ---[0m
+Création de 3 lignes de dépôt pour tester la classe LigneDepot:
+
+LigneDepot 1 (Livre avec ISBN):
+  Numéro ISBN/ISSN: 978-2-07-061275-8
+  Exemplaires: 3
+
+LigneDepot 2 (Magazine avec ISSN):
+  Numéro ISBN/ISSN: ISSN-1234-5678
+  Exemplaires: 2
+
+LigneDepot 3 (Manuel avec ISBN):
+  Numéro ISBN/ISSN: 978-2-10-123456-7
+  Exemplaires: 1
+
+[1;36m--- Test 3: Création de BonDepot ---[0m
+Création d'un bon de dépôt contenant les 3 lignes créées précédemment:
+
+BonDepot 1 créé:
+  ID (numéro unique): 1 (devrait être 1)
+  Numéro téléphone du déposant: 612345678
+  Date du dépôt: 2025-12-04
+  Nombre total d'articles déposés: 3
+  Détail des lignes de dépôt:
+    - Ligne 1: 978-2-07-061275-8 - 3 exemplaire(s)
+    - Ligne 2: ISSN-1234-5678 - 2 exemplaire(s)
+    - Ligne 3: 978-2-10-123456-7 - 1 exemplaire(s)
+
+[1;36m--- Test 4: Vérification de l'incrémentation automatique de l'ID ---[0m
+Création d'un deuxième bon de dépôt pour vérifier que l'ID s'incrémente automatiquement:
+
+BonDepot 2 créé:
+  ID (numéro unique): 2 (devrait être 2, incrémenté automatiquement)
+  Numéro téléphone du déposant: 698765432
+  Date du dépôt: 2024-02-01
+  Nombre total d'articles déposés: 1
+
+[1;36m--- Test 5: Question 4a - Ajouter des articles à un établissement ---[0m
+Établissement créé: Librairie du Centre
+
+Ajout livre1:  Réussi
+Ajout mag1:  Réussi
+Ajout manuel1:  Réussi
+Nombre d'articles dans l'établissement: 3
+
+[1;36m--- Test 6: Question 4a - Méthodes de la hiérarchie d'articles ---[0m
+Test placerApres():
+  livre1.placerApres(mag1): false (compare ISBN vs ISSN)
+  mag1.placerApres(livre1): true
+
+Test ajouter() - Augmenter exemplaires:
+  Exemplaires avant: 10
+  Après ajouter(5): 15 (devrait être 15)
+
+Test retirer() - Diminuer exemplaires:
+  Exemplaires avant: 15
+  Après retirer(3): 12 (devrait être 12)
+
+Test calculerPrix():
+  Prix initial livre1: 15.5€
+  Prix calculé livre1: 15.5€ (réduction 50% en avril)
+  Prix initial mag1: 5.9€
+  Prix calculé mag1: 1.475€ (selon date publication)
+
+[1;36m--- Test 7: Question 4c - Gérer exemplaires dans Etablissement ---[0m
+Test rechercher():
+  Article trouvé (ISBN 978-2-07-061275-8): Le Petit Prince
+  Exemplaires actuels: 12
+
+Test ajouter() - Augmenter exemplaires via Etablissement:
+  Ajout de 10 exemplaires: Réussi
+  Nouveaux exemplaires: 22
+
+Test retirer() - Diminuer exemplaires via Etablissement:
+  Retrait de 5 exemplaires: Réussi
+  Nouveaux exemplaires: 17
+
+Test avec article inexistant:
+  Ajout exemplaires pour ISBN inexistant: Échec (normal)
+
+[1;36m--- Test 8: Question 4b - Méthodes d'ajout spécifiques ---[0m
+Ajout via ajouterLivre : true
+Ajout via ajouterMagazine : true
+Ajout via ajouterManuel : false
+
+[1;36m--- Test 9: Question 5b - Ajout d'un bon de dépôt automatique ---[0m
+Ajout du bon automatique : true
+Nombre de bons maintenant : 1
+
+[1;36m--- Test 10: Question 5a - Test de la méthode ajouterLigne ---[0m
+Ajout ligne 1 (ISBN, 5 exemplaires): true
+Ajout ligne 2 (ISSN, 3 exemplaires): true
+Nombre d'articles déposés dans le bon: 8
+Lignes de dépôt:
+    - 978-2-07-061275-8: 5 exemplaire(s)
+    - ISSN-1234-5678: 3 exemplaire(s)
+
+[1;36m
+=== FIN DES TESTS ===[0m

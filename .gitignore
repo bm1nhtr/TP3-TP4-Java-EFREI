@@ -3,3 +3,6 @@ TP3-TP4/**
 # But don't ignore src folder in TP3-TP4
 !TP3-TP4/src/
 !TP3-TP4/src/**
+# Don't ignore Output folder (contains test results)
+!TP3-TP4/Output/
+!TP3-TP4/Output/**
