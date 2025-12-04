@@ -1,24 +1,43 @@
 package TP3;
 
-
+/**
+ * Classe représentant une ligne de dépôt
+ * Une ligne de dépôt contient un article et le nombre d'exemplaires déposés
+ */
 public class LigneDepot {
-    private int codeArticle;
-    private int exemplaires;
+    private String codeArticle; // Code de l'article déposé (ISBN ou ISSN)
+    private int exemplaires; // Nombre d'exemplaires déposés
     
-    public LigneDepot(int codeArticle, int exemplaires){
+    /**
+     * Constructeur de la classe LigneDepot
+     * @param codeArticle Code de l'article (ISBN ou ISSN)
+     * @param exemplaires Nombre d'exemplaires déposés
+     */
+    public LigneDepot(String codeArticle, int exemplaires){
         this.codeArticle = codeArticle;
         this.exemplaires = exemplaires;
     }
-    public int getcodeArticle(){
+    
+
+    // Getters
+    public String getCodeArticle(){
         return this.codeArticle;
     }
-    public int getexemplaires(){
+    
+    public String getNumeroIsbnIssn(){
+        return this.codeArticle;
+    }
+    
+    public int getExemplaires(){
         return this.exemplaires;
     }
-    public void setexemplaires(int exemplaires){
+    
+    // Setters
+    public void setExemplaires(int exemplaires){
         this.exemplaires = exemplaires;
     }
-    public void setcodeArticle(int codeArticle){
+    
+    public void setCodeArticle(String codeArticle){
         this.codeArticle = codeArticle;
     }
 }

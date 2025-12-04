@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp3;
+package TP3;
 
 /**
  *
@@ -40,5 +40,46 @@ public abstract class article {
     public void setPrixInitial(double prixInitial) { this.prixInitial = prixInitial; }
     public void setNbExemplaires(int nbExemplaires) { this.nbExemplaires = nbExemplaires; }
 
+    // ----------- QUESTION 4A -----------
+    
+    /**
+     * Question 4a : Comparer deux articles pour déterminer l'ordre
+     * @param autre L'autre article à comparer
+     * @return true si cet article doit être placé après l'autre dans le tableau, false sinon
+     */
+    public boolean placerApres(article autre) {
+        if (autre == null) {
+            return false;
+        }
+        // Comparer les numéros ISBN ou ISSN en utilisant compareTo
+        return this.getNumero().compareTo(autre.getNumero()) > 0;
+    }
+    
+    /**
+     * Question 4a : Augmenter le nombre d'exemplaires d'une quantité donnée
+     * @param quantite La quantité à ajouter
+     */
+    public void ajouter(int quantite) {
+        if (quantite > 0) {
+            this.nbExemplaires += quantite;
+        }
+    }
+    
+    /**
+     * Question 4a : Diminuer le nombre d'exemplaires d'une quantité donnée
+     * @param quantite La quantité à retirer
+     */
+    public void retirer(int quantite) {
+        if (quantite > 0 && quantite <= this.nbExemplaires) {
+            this.nbExemplaires -= quantite;
+        }
+    }
+    
+    /**
+     * Question 4a : Calculer le prix de l'article en tenant compte des réductions
+     * Cette méthode doit être redéfinie dans les sous-classes pour appliquer les réductions spécifiques
+     * @return Le prix calculé avec les réductions
+     */
+    public abstract double calculerPrix();
     
 }

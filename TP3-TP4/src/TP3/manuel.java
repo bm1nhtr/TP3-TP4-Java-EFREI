@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package tp3;
+package TP3;
 
 /**
  *
@@ -11,6 +11,7 @@ package tp3;
 // Un manuel scolaire est un type particulier de Livre.
 // Il hérite donc de Livre (donc d'Article) : possède isbn + nbPages,
 // et ajoute : matiere + niveau scolaire.
+// Le calculerPrix() est hérité de Livre (réduction 50% en avril)
 public class manuel extends livre {
     
     // Matière enseignée (ex : "Français", "Mathématiques")
