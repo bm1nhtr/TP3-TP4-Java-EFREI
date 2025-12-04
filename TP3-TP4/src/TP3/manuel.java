@@ -11,6 +11,7 @@ package TP3;
 // Un manuel scolaire est un type particulier de Livre.
 // Il hérite donc de Livre (donc d'Article) : possède isbn + nbPages,
 // et ajoute : matiere + niveau scolaire.
+// Le calculerPrix() est hérité de Livre (réduction 50% en avril)
 public class manuel extends livre {
     
     // Matière enseignée (ex : "Français", "Mathématiques")

@@ -1,5 +1,8 @@
 package TP3;
 import java.time.LocalDate;
+import java.io.IOException;
+import java.io.PrintStream;
+import TP3.Utiles.ConsoleColors;
 
 /**
  * Classe principale pour tester les classes du TP3
@@ -11,10 +14,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("=== TEST DES CLASSES TP3 ===\n");
+        // Option pour sauvegarder la sortie dans un fichier
+        // Décommentez la ligne suivante pour sauvegarder les résultats dans output_test.txt
+        enableFileOutput();
+        
+        System.out.println(ConsoleColors.cyanBold("=== TEST DES CLASSES TP3 ===\n"));
         
         // Test 1: Création d'articles
-        System.out.println("--- Test 1: Création d'articles ---");
+        System.out.println(ConsoleColors.testHeader("1", "Création d'articles"));
         
         livre livre1 = new livre("Le Petit Prince", 15.50, 10, "978-2-07-061275-8", 96);
         System.out.println("Livre créé:");
@@ -50,54 +57,71 @@ public class Main {
         System.out.println();
         
         // Test 2: Création de LigneDepot
-        System.out.println("--- Test 2: Création de LigneDepot ---");
+        System.out.println(ConsoleColors.testHeader("2", "Création de LigneDepot"));
+        System.out.println("Création de 3 lignes de dépôt pour tester la classe LigneDepot:");
+        System.out.println();
         
-        LigneDepot ligne1 = new LigneDepot(1, 3); // Code article 1, 3 exemplaires
-        LigneDepot ligne2 = new LigneDepot(2, 2); // Code article 2, 2 exemplaires
-        LigneDepot ligne3 = new LigneDepot(3, 1); // Code article 3, 1 exemplaire
-        
-        System.out.println("LigneDepot 1:");
-        System.out.println("  Code article: " + ligne1.getCodeArticle());
+        // Création de la première ligne : un livre avec ISBN
+        LigneDepot ligne1 = new LigneDepot("978-2-07-061275-8", 3);
+        System.out.println("LigneDepot 1 (Livre avec ISBN):");
+        System.out.println("  Numéro ISBN/ISSN: " + ligne1.getNumeroIsbnIssn());
         System.out.println("  Exemplaires: " + ligne1.getExemplaires());
         System.out.println();
         
-        System.out.println("LigneDepot 2:");
-        System.out.println("  Code article: " + ligne2.getCodeArticle());
+        // Création de la deuxième ligne : un magazine avec ISSN
+        LigneDepot ligne2 = new LigneDepot("ISSN-1234-5678", 2);
+        System.out.println("LigneDepot 2 (Magazine avec ISSN):");
+        System.out.println("  Numéro ISBN/ISSN: " + ligne2.getNumeroIsbnIssn());
         System.out.println("  Exemplaires: " + ligne2.getExemplaires());
         System.out.println();
         
-        // Test 3: Création de BonDepot
-        System.out.println("--- Test 3: Création de BonDepot ---");
+        // Création de la troisième ligne : un manuel avec ISBN
+        LigneDepot ligne3 = new LigneDepot("978-2-10-123456-7", 1);
+        System.out.println("LigneDepot 3 (Manuel avec ISBN):");
+        System.out.println("  Numéro ISBN/ISSN: " + ligne3.getNumeroIsbnIssn());
+        System.out.println("  Exemplaires: " + ligne3.getExemplaires());
+        System.out.println();
         
+        // Test 3: Création de BonDepot
+        System.out.println(ConsoleColors.testHeader("3", "Création de BonDepot"));
+        System.out.println("Création d'un bon de dépôt contenant les 3 lignes créées précédemment:");
+        System.out.println();
+        
+        // Création d'un tableau contenant les 3 lignes de dépôt
         LigneDepot[] lignes = {ligne1, ligne2, ligne3};
+        // Création du bon de dépôt avec numéro de téléphone, date actuelle, et les lignes
         BonDepot bon1 = new BonDepot(612345678, LocalDate.now(), 3, lignes);
         
-        System.out.println("BonDepot 1:");
-        System.out.println("  ID: " + bon1.getId());
-        System.out.println("  Numéro téléphone: " + bon1.getNumTel());
-        System.out.println("  Date dépôt: " + bon1.getDateDepot());
-        System.out.println("  Nombre d'articles déposés: " + bon1.getNbArticleDeposes());
-        System.out.println("  Lignes de dépôt:");
+        System.out.println("BonDepot 1 créé:");
+        System.out.println("  ID (numéro unique): " + bon1.getId() + " (devrait être 1)");
+        System.out.println("  Numéro téléphone du déposant: " + bon1.getNumTel());
+        System.out.println("  Date du dépôt: " + bon1.getDateDepot());
+        System.out.println("  Nombre total d'articles déposés: " + bon1.getNbArticleDeposes());
+        System.out.println("  Détail des lignes de dépôt:");
         for (int i = 0; i < bon1.getListArticles().length && bon1.getListArticles()[i] != null; i++) {
             LigneDepot ligne = bon1.getListArticles()[i];
-            System.out.println("    - Article " + ligne.getCodeArticle() + ": " + ligne.getExemplaires() + " exemplaire(s)");
+            System.out.println("    - Ligne " + (i+1) + ": " + ligne.getNumeroIsbnIssn() + " - " + ligne.getExemplaires() + " exemplaire(s)");
         }
         System.out.println();
         
         // Test 4: Création d'un deuxième BonDepot pour vérifier l'incrémentation de l'ID
-        System.out.println("--- Test 4: Vérification de l'incrémentation de l'ID ---");
+        System.out.println(ConsoleColors.testHeader("4", "Vérification de l'incrémentation automatique de l'ID"));
+        System.out.println("Création d'un deuxième bon de dépôt pour vérifier que l'ID s'incrémente automatiquement:");
+        System.out.println();
         
-        LigneDepot[] lignes2 = {new LigneDepot(4, 5)};
+        // Création d'un nouveau bon avec une seule ligne
+        LigneDepot[] lignes2 = {new LigneDepot("978-2-07-061275-8", 5)};
         BonDepot bon2 = new BonDepot(698765432, LocalDate.of(2024, 2, 1), 1, lignes2);
         
-        System.out.println("BonDepot 2:");
-        System.out.println("  ID: " + bon2.getId() + " (devrait être 2)");
-        System.out.println("  Numéro téléphone: " + bon2.getNumTel());
-        System.out.println("  Date dépôt: " + bon2.getDateDepot());
+        System.out.println("BonDepot 2 créé:");
+        System.out.println("  ID (numéro unique): " + bon2.getId() + " (devrait être 2, incrémenté automatiquement)");
+        System.out.println("  Numéro téléphone du déposant: " + bon2.getNumTel());
+        System.out.println("  Date du dépôt: " + bon2.getDateDepot());
+        System.out.println("  Nombre total d'articles déposés: " + bon2.getNbArticleDeposes());
         System.out.println();
         
         // Test 5: Question 4a - Ajouter des articles à un établissement
-        System.out.println("--- Test 5: Question 4a - Ajouter des articles à un établissement ---");
+        System.out.println(ConsoleColors.testHeader("5", "Question 4a - Ajouter des articles à un établissement"));
         
         Etablissement etablissement = new Etablissement("Librairie du Centre");
         System.out.println("Établissement créé: " + etablissement.getNomBoutique());
@@ -114,87 +138,89 @@ public class Main {
         System.out.println("Nombre d'articles dans l'établissement: " + etablissement.getNbArticles());
         System.out.println();
         
-        // Test 6: Question 4c - Calculer le nombre total d'exemplaires déposés
-        System.out.println("--- Test 6: Question 4c - Nombre total d'exemplaires déposés ---");
+        // Test 6: Question 4a - Test des méthodes de la hiérarchie d'articles
+        System.out.println(ConsoleColors.testHeader("6", "Question 4a - Méthodes de la hiérarchie d'articles"));
         
-        // Ajouter les bons de dépôt à l'établissement
-        etablissement.ajouterBonDepot(bon1);
-        etablissement.ajouterBonDepot(bon2);
-        
-        // Créer un autre bon de dépôt avec le même code article pour tester le calcul
-        LigneDepot[] lignes3 = {new LigneDepot(1, 2), new LigneDepot(2, 1)}; // Article 1: 2 exemplaires, Article 2: 1 exemplaire
-        BonDepot bon3 = new BonDepot(611111111, LocalDate.of(2024, 2, 15), 2, lignes3);
-        etablissement.ajouterBonDepot(bon3);
-        
-        System.out.println("Nombre de bons de dépôt: " + etablissement.getNbBonDepots());
+        // Test placerApres
+        System.out.println("Test placerApres():");
+        boolean livreApresMag = livre1.placerApres(mag1);
+        System.out.println("  livre1.placerApres(mag1): " + livreApresMag + " (compare ISBN vs ISSN)");
+        boolean magApresLivre = mag1.placerApres(livre1);
+        System.out.println("  mag1.placerApres(livre1): " + magApresLivre);
         System.out.println();
         
-        // Calculer le nombre total d'exemplaires déposés pour chaque article
-        int totalArticle1 = etablissement.nombreExemplairesDeposes(1);
-        int totalArticle2 = etablissement.nombreExemplairesDeposes(2);
-        int totalArticle3 = etablissement.nombreExemplairesDeposes(3);
-        int totalArticle4 = etablissement.nombreExemplairesDeposes(4);
-        
-        System.out.println("Total exemplaires déposés pour l'article 1: " + totalArticle1 + " (devrait être 5: 3+2)");
-        System.out.println("Total exemplaires déposés pour l'article 2: " + totalArticle2 + " (devrait être 3: 2+1)");
-        System.out.println("Total exemplaires déposés pour l'article 3: " + totalArticle3 + " (devrait être 1)");
-        System.out.println("Total exemplaires déposés pour l'article 4: " + totalArticle4 + " (devrait être 5)");
+        // Test ajouter (augmenter exemplaires)
+        System.out.println("Test ajouter() - Augmenter exemplaires:");
+        System.out.println("  Exemplaires avant: " + livre1.getNbExemplaires());
+        livre1.ajouter(5);
+        System.out.println("  Après ajouter(5): " + livre1.getNbExemplaires() + " (devrait être 15)");
         System.out.println();
         
-        // Test 7: Question 5a - Rechercher un article par son numéro
-        System.out.println("--- Test 7: Question 5a - Rechercher un article par son numéro ---");
+        // Test retirer (diminuer exemplaires)
+        System.out.println("Test retirer() - Diminuer exemplaires:");
+        System.out.println("  Exemplaires avant: " + livre1.getNbExemplaires());
+        livre1.retirer(3);
+        System.out.println("  Après retirer(3): " + livre1.getNbExemplaires() + " (devrait être 12)");
+        System.out.println();
         
-        // Rechercher un livre par ISBN
-        article articleTrouve1 = etablissement.rechercherArticleParNumero("978-2-07-061275-8");
+        // Test calculerPrix
+        System.out.println("Test calculerPrix():");
+        System.out.println("  Prix initial livre1: " + livre1.getPrixInitial() + "€");
+        System.out.println("  Prix calculé livre1: " + livre1.calculerPrix() + "€ (réduction 50% en avril)");
+        System.out.println("  Prix initial mag1: " + mag1.getPrixInitial() + "€");
+        System.out.println("  Prix calculé mag1: " + mag1.calculerPrix() + "€ (selon date publication)");
+        System.out.println();
+        
+        // Test 7: Question 4c - Rechercher, ajouter et retirer exemplaires dans Etablissement
+        System.out.println(ConsoleColors.testHeader("7", "Question 4c - Gérer exemplaires dans Etablissement"));
+        
+        // Rechercher un article
+        System.out.println("Test rechercher():");
+        article articleTrouve1 = etablissement.rechercher("978-2-07-061275-8");
         if (articleTrouve1 != null) {
-            System.out.println("Article trouvé (ISBN 978-2-07-061275-8):");
-            System.out.println("  Description: " + articleTrouve1.getDescription());
-            System.out.println("  Prix: " + articleTrouve1.getPrixInitial() + "€");
-            if (articleTrouve1 instanceof livre) {
-                livre l = (livre) articleTrouve1;
-                System.out.println("  Type: Livre");
-                System.out.println("  Pages: " + l.getNbPages());
-            }
+            System.out.println("  Article trouvé (ISBN 978-2-07-061275-8): " + articleTrouve1.getDescription());
+            System.out.println("  Exemplaires actuels: " + articleTrouve1.getNbExemplaires());
         } else {
-            System.out.println("Article non trouvé pour ISBN 978-2-07-061275-8");
+            System.out.println("  Article non trouvé");
         }
         System.out.println();
         
-        // Rechercher un magazine par ISSN
-        article articleTrouve2 = etablissement.rechercherArticleParNumero("ISSN-1234-5678");
-        if (articleTrouve2 != null) {
-            System.out.println("Article trouvé (ISSN ISSN-1234-5678):");
-            System.out.println("  Description: " + articleTrouve2.getDescription());
-            System.out.println("  Prix: " + articleTrouve2.getPrixInitial() + "€");
-            if (articleTrouve2 instanceof magazine) {
-                magazine m = (magazine) articleTrouve2;
-                System.out.println("  Type: Magazine");
-                System.out.println("  Périodicité: " + m.getPeriodicite());
-            }
-        } else {
-            System.out.println("Article non trouvé pour ISSN ISSN-1234-5678");
+        // Ajouter exemplaires via Etablissement
+        System.out.println("Test ajouter() - Augmenter exemplaires via Etablissement:");
+        boolean ajoutReussi = etablissement.ajouter("978-2-07-061275-8", 10);
+        System.out.println("  Ajout de 10 exemplaires: " + (ajoutReussi ? "Réussi" : "Échec"));
+        if (ajoutReussi) {
+            article art = etablissement.rechercher("978-2-07-061275-8");
+            System.out.println("  Nouveaux exemplaires: " + art.getNbExemplaires());
         }
         System.out.println();
         
-        // Rechercher un article qui n'existe pas
-        article articleTrouve3 = etablissement.rechercherArticleParNumero("ISBN-999-999-999");
-        if (articleTrouve3 != null) {
-            System.out.println("Article trouvé: " + articleTrouve3.getDescription());
-        } else {
-            System.out.println("Article non trouvé pour ISBN-999-999-999 (normal, cet article n'existe pas)");
+        // Retirer exemplaires via Etablissement
+        System.out.println("Test retirer() - Diminuer exemplaires via Etablissement:");
+        boolean retraitReussi = etablissement.retirer("978-2-07-061275-8", 5);
+        System.out.println("  Retrait de 5 exemplaires: " + (retraitReussi ? "Réussi" : "Échec"));
+        if (retraitReussi) {
+            article art = etablissement.rechercher("978-2-07-061275-8");
+            System.out.println("  Nouveaux exemplaires: " + art.getNbExemplaires());
         }
         System.out.println();
         
-        System.out.println("=== FIN DES TESTS ===");
+        // Test avec article inexistant
+        System.out.println("Test avec article inexistant:");
+        boolean ajoutEchec = etablissement.ajouter("ISBN-999-999-999", 5);
+        System.out.println("  Ajout exemplaires pour ISBN inexistant: " + (ajoutEchec ? "Réussi" : "Échec (normal)"));
+        System.out.println();
+        
+        
 
 
-        // Test 8 : 5b - Utilisation des méthodes ajouterLivre, ajouterMagazine, ajouterManuel
-        System.out.println("--- Test 5b : Utilisation des méthodes d'ajout spécifiques ---");
+        // Test 8: Question 4b - Utilisation des méthodes ajouterLivre, ajouterMagazine, ajouterManuel
+        System.out.println(ConsoleColors.testHeader("8", "Question 4b - Méthodes d'ajout spécifiques"));
 
         boolean ajoutLivre2 = etablissement.ajouterLivre(
                 "Nouveau Livre Test", 12.99, 5, "ISBN-TEST-001", 150);
         boolean ajoutMag2 = etablissement.ajouterMagazine(
-                "Magazine Test", 4.50, 8, "ISSN-TEST-001", "Hebdomadaire", "2024-12-01");
+                "Magazine Test", 4.50, 8, "ISSN-TEST-001", "Hebdomadaire", LocalDate.of(2024, 12, 1));
         boolean ajoutManuel2 = etablissement.ajouterManuel(
                 "Manuel Test", 18.00, 6, "ISBN-TEST-002", 220, "Physique", "Lycée");
 
@@ -204,12 +230,12 @@ public class Main {
         System.out.println();
 
 
-        // Test 9: 5c - Utilisation de la méthode ajouter() pour un bon de dépôt automatique
-        System.out.println("--- Test 5c : Ajout d'un bon de dépôt automatique ---");
+        // Test 9: Question 5b - Utilisation de la méthode ajouter() pour un bon de dépôt automatique
+        System.out.println(ConsoleColors.testHeader("9", "Question 5b - Ajout d'un bon de dépôt automatique"));
 
         LigneDepot[] lignesTest = {
-                new LigneDepot(1, 2),
-                new LigneDepot(2, 1)
+                new LigneDepot("978-2-07-061275-8", 2),
+                new LigneDepot("ISSN-1234-5678", 1)
         };
 
         boolean ajoutBonAuto = etablissement.ajouter(600000000, lignesTest);
@@ -217,8 +243,71 @@ public class Main {
         System.out.println("Ajout du bon automatique : " + ajoutBonAuto);
         System.out.println("Nombre de bons maintenant : " + etablissement.getNbBonDepots());
         System.out.println();
+        
+        // Test 10: Question 5a - Test de la méthode ajouterLigne
+        System.out.println(ConsoleColors.testHeader("10", "Question 5a - Test de la méthode ajouterLigne"));
+        
+        BonDepot bonTest = new BonDepot(699999999, LocalDate.now(), 0, new LigneDepot[5]);
+        boolean ajoutLigne1 = bonTest.ajouterLigne("978-2-07-061275-8", 5);
+        boolean ajoutLigne2 = bonTest.ajouterLigne("ISSN-1234-5678", 3);
+        
+        System.out.println("Ajout ligne 1 (ISBN, 5 exemplaires): " + ajoutLigne1);
+        System.out.println("Ajout ligne 2 (ISSN, 3 exemplaires): " + ajoutLigne2);
+        System.out.println("Nombre d'articles déposés dans le bon: " + bonTest.getNbArticleDeposes());
+        System.out.println("Lignes de dépôt:");
+        for (int i = 0; i < bonTest.getListArticles().length && bonTest.getListArticles()[i] != null; i++) {
+            LigneDepot ligne = bonTest.getListArticles()[i];
+            System.out.println("    - " + ligne.getNumeroIsbnIssn() + ": " + ligne.getExemplaires() + " exemplaire(s)");
+        }
+        System.out.println();
+        
+        System.out.println(ConsoleColors.cyanBold("\n=== FIN DES TESTS ==="));
+        
+        // Si vous avez activé la sauvegarde dans un fichier, fermez le flux
+        System.out.flush(); // S'assurer que tout est écrit dans le fichier
+        closeFileOutput(); // Fermer le fichier proprement
 
     }
     
+    // Variable pour stocker le PrintStream du fichier (pour pouvoir le fermer à la fin)
+    private static PrintStream fileOutputStream = null;
+    
+    /**
+     * Méthode utilitaire pour sauvegarder la sortie dans un fichier
+     * Décommentez l'appel à cette méthode dans main() pour activer la sauvegarde
+     * Les résultats seront affichés dans la console ET sauvegardés dans le fichier
+     */
+    private static void enableFileOutput() {
+        try {
+            // Créer un PrintStream pour le fichier dans le dossier Output (même niveau que src)
+            String filePath = "Output/output_TP3.txt"; // Fichier de sortie pour TP3
+            java.io.File file = new java.io.File(filePath);
+            // Créer le répertoire Output si nécessaire
+            file.getParentFile().mkdirs();
+            fileOutputStream = new PrintStream(file, "UTF-8");
+            PrintStream consoleOut = System.out;
+            
+            // Créer un DualOutputStream qui écrit dans les deux
+            System.setOut(new PrintStream(new TP3.Utiles.DualOutputStream(consoleOut, fileOutputStream)));
+            
+            // Afficher le chemin absolu du fichier
+            String absolutePath = file.getAbsolutePath();
+            System.out.println("Les résultats sont également sauvegardés dans: " + absolutePath + "\n");
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la création du fichier de sortie: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Ferme le fichier de sortie si il a été ouvert
+     */
+    private static void closeFileOutput() {
+        if (fileOutputStream != null) {
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            System.out.println("\nFichier de sortie fermé avec succès.");
+        }
+    }
     
 }

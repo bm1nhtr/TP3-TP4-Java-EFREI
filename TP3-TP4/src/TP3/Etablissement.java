@@ -1,4 +1,5 @@
 package TP3;
+import java.time.LocalDate;
 
 /**
  * Classe représentant un établissement (boutique)
@@ -8,18 +9,22 @@ public class Etablissement {
     // Nom de la boutique
     private String nomBoutique;
     // Tableau des articles disponibles dans la boutique
-    private article[] Articles = new article[5];
+    private article[] Articles;
     // Tableau des bons de dépôt de l'établissement
-    private BonDepot[] BonDepots = new BonDepot[5];
+    private BonDepot[] BonDepots;
     // Compteur pour le nombre d'articles
-    private int nbArticles = 0;
+    private int nbArticles;
     // Compteur pour le nombre de bons de dépôt
-    private int nbBonDepots = 0;
+    private int nbBonDepots;
     
     /**
      * Constructeur par défaut de la classe Etablissement
      */
     public Etablissement() {
+        this.Articles = new article[5];
+        this.BonDepots = new BonDepot[5];
+        this.nbArticles = 0;
+        this.nbBonDepots = 0;
     }
     
     /**
@@ -28,6 +33,10 @@ public class Etablissement {
      */
     public Etablissement(String nomBoutique) {
         this.nomBoutique = nomBoutique;
+        this.Articles = new article[5];
+        this.BonDepots = new BonDepot[5];
+        this.nbArticles = 0;
+        this.nbBonDepots = 0;
     }
     
     // Getters
@@ -65,7 +74,34 @@ public class Etablissement {
     }
     
     /**
-     * Question 4a : Ajouter un article au stock de l'établissement
+     * Méthode pour afficher les instances de la classe Etablissement
+     * @return Une chaîne de caractères représentant l'établissement
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Établissement: ").append(nomBoutique != null ? nomBoutique : "Non défini").append("\n");
+        sb.append("Nombre d'articles: ").append(nbArticles).append("\n");
+        sb.append("Articles disponibles:\n");
+        for (int i = 0; i < nbArticles; i++) {
+            if (Articles[i] != null) {
+                sb.append("  - ").append(Articles[i].toString()).append("\n");
+            }
+        }
+        sb.append("Nombre de bons de dépôt: ").append(nbBonDepots).append("\n");
+        sb.append("Bons de dépôt:\n");
+        for (int i = 0; i < nbBonDepots; i++) {
+            if (BonDepots[i] != null) {
+                sb.append("  - Bon n°").append(BonDepots[i].getId())
+                  .append(" - Tél: ").append(BonDepots[i].getNumTel())
+                  .append(" - Date: ").append(BonDepots[i].getDateDepot()).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Ajouter un article au stock de l'établissement
      * @param art L'article à ajouter
      * @return true si l'article a été ajouté, false si le tableau est plein
      */
@@ -79,45 +115,11 @@ public class Etablissement {
     }
     
     /**
-     * Question 4c : Calculer le nombre total d'exemplaires déposés pour un article donné
-     * @param codeArticle Le code de l'article recherché
-     * @return Le nombre total d'exemplaires déposés pour cet article
-     */
-    public int nombreExemplairesDeposes(int codeArticle) {
-        int total = 0;
-        for (int i = 0; i < nbBonDepots; i++) {
-            if (BonDepots[i] != null) {
-                LigneDepot[] lignes = BonDepots[i].getListArticles();
-                for (int j = 0; j < lignes.length && lignes[j] != null; j++) {
-                    if (lignes[j].getCodeArticle() == codeArticle) {
-                        total += lignes[j].getExemplaires();
-                    }
-                }
-            }
-        }
-        return total;
-    }
-    
-    /**
-     * Ajouter un bon de dépôt à l'établissement
-     * @param bon Le bon de dépôt à ajouter
-     * @return true si le bon a été ajouté, false si le tableau est plein
-     */
-    public boolean ajouterBonDepot(BonDepot bon) {
-        if (nbBonDepots < BonDepots.length) {
-            BonDepots[nbBonDepots] = bon;
-            nbBonDepots++;
-            return true;
-        }
-        return false; // Tableau plein
-    }
-
-    /**
-     * Question 5a : Rechercher un article par son numéro (ISBN ou ISSN)
+     * Question 4c : Rechercher un article par son numéro (ISBN ou ISSN)
      * @param numero Le numéro de l'article (ISBN ou ISSN)
      * @return L'article trouvé, null si non trouvé
      */
-    public article rechercherArticleParNumero(String numero) {
+    public article rechercher(String numero) {
         for (int i = 0; i < nbArticles; i++) {
             if (Articles[i] != null && Articles[i].getNumero().equals(numero)) {
                 return Articles[i];
@@ -125,12 +127,48 @@ public class Etablissement {
         }
         return null; // Article non trouvé
     }
+    
+    /**
+     * Question 4c : Augmenter le nombre d'exemplaires d'un article
+     * 
+     * NOTE: Method overloading - Cette méthode a le même nom que la méthode ajouter() 
+     * de la question 5b, mais avec des paramètres différents :
+     * - Cette méthode (4c) : ajouter(String numeroIsbnIssn, int quantite) - augmente exemplaires d'un article existant
+     * - Méthode 5b : ajouter(int numTel, LigneDepot[] lignesDepot) - ajoute un bon de dépôt
+     * 
+     * @param numeroIsbnIssn Le numéro ISBN ou ISSN de l'article
+     * @param quantite La quantité d'exemplaires reçue
+     * @return true si l'article a été trouvé et mis à jour, false sinon
+     */
+    public boolean ajouter(String numeroIsbnIssn, int quantite) {
+        article art = rechercher(numeroIsbnIssn);
+        if (art != null) {
+            art.ajouter(quantite);
+            return true;
+        }
+        return false; // Article non trouvé
+    }
+    
+    /**
+     * Question 4c : Diminuer le nombre d'exemplaires d'un article
+     * @param numeroIsbnIssn Le numéro ISBN ou ISSN de l'article
+     * @param quantite La quantité d'exemplaires vendue
+     * @return true si l'article a été trouvé et mis à jour, false sinon
+     */
+    public boolean retirer(String numeroIsbnIssn, int quantite) {
+        article art = rechercher(numeroIsbnIssn);
+        if (art != null) {
+            art.retirer(quantite);
+            return true;
+        }
+        return false; // Article non trouvé
+    }
 
     // question 4(b) ajouter un livre, magazine ou manuel 
     // true si l'ajout a est fait avec succès, false si le tableau est plein
 
         //Ajouter un magazine à l'établissement
-    public boolean ajouterMagazine(String description, double prixInitial, int nbExemplaires, String issn, String periodicite, String datePublication) {
+    public boolean ajouterMagazine(String description, double prixInitial, int nbExemplaires, String issn, String periodicite, LocalDate datePublication) {
         // Création d'un objet Magazine avec les informations fournies
         magazine magazine = new magazine(description, prixInitial, nbExemplaires, issn, periodicite, datePublication);
         // Ajout du magazine au tableau Articles via la méthode ajouterArticle
@@ -153,13 +191,19 @@ public class Etablissement {
         return ajouterArticle(manuel);
     }
 
-    //QUESTION 5B
-    //Ajouter un bon de dépôt à l'établissement.
-    //Le bon est automatiquement daté et numéroté.
-    //numTel : Numéro de téléphone du client
-    //lignesDepot : Les lignes de dépôt (articles + exemplaires)
-    //true si le bon a été ajouté, false si le tableau est plein
- 
+    /**
+     * Question 5b : Ajouter un bon de dépôt à l'établissement.
+     * Le bon est automatiquement daté et numéroté.
+     * 
+     * NOTE: Method overloading - Cette méthode a le même nom que la méthode ajouter() 
+     * de la question 4c, mais avec des paramètres différents :
+     * - Méthode 4c : ajouter(String numeroIsbnIssn, int quantite) - augmente exemplaires d'un article existant
+     * - Cette méthode (5b) : ajouter(int numTel, LigneDepot[] lignesDepot) - ajoute un bon de dépôt
+     * 
+     * @param numTel Numéro de téléphone du client
+     * @param lignesDepot Les lignes de dépôt (articles + exemplaires)
+     * @return true si le bon a été ajouté, false si le tableau est plein
+     */
     public boolean ajouter(int numTel, LigneDepot[] lignesDepot) {
 
         //On vérifie s'il reste de la place

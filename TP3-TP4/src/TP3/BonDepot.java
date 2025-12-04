@@ -79,6 +79,25 @@ public class BonDepot {
         this.listArticles = listArticles;
     }
 
+    /**
+     * Question 5a : Ajouter une ligne de dépôt au bon de dépôt
+     * @param numeroIsbnIssn Le numéro ISBN ou ISSN de l'article
+     * @param exemplaires Le nombre d'exemplaires déposés
+     * @return true si la ligne a été ajoutée, false si le tableau est plein
+     */
+    public boolean ajouterLigne(String numeroIsbnIssn, int exemplaires) {
+        // Chercher la première position libre dans le tableau
+        for (int i = 0; i < listArticles.length; i++) {
+            if (listArticles[i] == null) {
+                // Créer une nouvelle ligne de dépôt et l'ajouter
+                listArticles[i] = new LigneDepot(numeroIsbnIssn, exemplaires);
+                // Mettre à jour le nombre d'articles déposés
+                nbArticleDeposes += exemplaires;
+                return true;
+            }
+        }
+        return false; // Tableau plein
+    }
     
     
 }
