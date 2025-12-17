@@ -87,4 +87,19 @@ public class magazine extends article {
         return getPrixInitial(); // Pas de réduction
     }
     
+    /**
+     * TP4 : Méthode versFichier pour sauvegarder les informations du magazine dans un fichier
+     * Format multi-lignes:
+     * Ligne 1: ISSN
+     * Ligne 2: Description : prix : exemplaires : périodicité : datePublication
+     * @return Tableau de chaînes de caractères, chaque élément est une ligne
+     */
+    public String[] versFichier() {
+        String[] lignes = new String[2];
+        lignes[0] = issn;
+        lignes[1] = getDescription() + " : " + getPrixInitial() + " : " + 
+                    getNbExemplaires() + " : " + periodicite + " : " + datePublication;
+        return lignes;
+    }
+    
 }
