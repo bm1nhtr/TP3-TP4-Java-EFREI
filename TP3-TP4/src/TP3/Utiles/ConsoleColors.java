@@ -72,7 +72,7 @@ public class ConsoleColors {
     }
     
     /**
-     * Affiche un message de test (en cyan gras - nổi bật trên cả background đen và trắng)
+     * Affiche un message de test (en cyan gras - visible sur fond noir et blanc)
      * @param testNumber Le numéro du test
      * @param testName Le nom du test
      * @return Le message formaté en couleur

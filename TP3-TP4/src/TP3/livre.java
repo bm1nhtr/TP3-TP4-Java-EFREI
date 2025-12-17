@@ -53,4 +53,19 @@ public class livre extends article {
         return getPrixInitial();
     }
     
+    /**
+     * TP4 : Méthode versFichier pour sauvegarder les informations du livre dans un fichier
+     * Format multi-lignes:
+     * Ligne 1: ISBN
+     * Ligne 2: Description : prix : exemplaires : pages
+     * @return Tableau de chaînes de caractères, chaque élément est une ligne
+     */
+    public String[] versFichier() {
+        String[] lignes = new String[2];
+        lignes[0] = isbn;
+        lignes[1] = getDescription() + " : " + getPrixInitial() + " : " + 
+                    getNbExemplaires() + " : " + nbPages;
+        return lignes;
+    }
+    
 }

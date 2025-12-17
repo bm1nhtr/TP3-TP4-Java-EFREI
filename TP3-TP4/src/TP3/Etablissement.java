@@ -1,5 +1,11 @@
 package TP3;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Classe représentant un établissement (boutique)
@@ -232,7 +238,465 @@ public class Etablissement {
         return true;
     }
 
-
+    // ========== TP4 - MÉTHODES LISTER ==========
+    
+    /**
+     * TP4 : Afficher l'ensemble des articles avec leur prix à la date courante,
+     * rangés par ordre croissant du nombre d'exemplaires
+     */
+    public void lister() {
+        // Créer une copie du tableau pour ne pas modifier l'original
+        article[] articlesTries = new article[nbArticles];
+        for (int i = 0; i < nbArticles; i++) {
+            articlesTries[i] = Articles[i];
+        }
+        
+        // Trier par nombre d'exemplaires croissant
+        Arrays.sort(articlesTries, 0, nbArticles, new Comparator<article>() {
+            @Override
+            public int compare(article a1, article a2) {
+                if (a1 == null && a2 == null) return 0;
+                if (a1 == null) return 1;
+                if (a2 == null) return -1;
+                return Integer.compare(a1.getNbExemplaires(), a2.getNbExemplaires());
+            }
+        });
+        
+        // Afficher les articles
+        System.out.println("=== Liste des articles (triés par nombre d'exemplaires croissant) ===");
+        for (int i = 0; i < nbArticles; i++) {
+            if (articlesTries[i] != null) {
+                System.out.println("  - " + articlesTries[i].getDescription() + 
+                                 " | Prix actuel: " + articlesTries[i].calculerPrix() + "€" +
+                                 " | Exemplaires: " + articlesTries[i].getNbExemplaires() +
+                                 " | Numéro: " + articlesTries[i].getNumero());
+            }
+        }
+        System.out.println();
+    }
+    
+    /**
+     * TP4 : Afficher l'ensemble des bons de dépôt correspondant à un client donné
+     * (identifié par son numéro de téléphone), rangés par date (la plus récente en dernier)
+     * @param numTel Numéro de téléphone du client
+     */
+    public void lister(int numTel) {
+        // Créer un tableau temporaire pour stocker les bons du client
+        BonDepot[] bonsClient = new BonDepot[nbBonDepots];
+        int nbBonsClient = 0;
+        
+        // Filtrer les bons du client
+        for (int i = 0; i < nbBonDepots; i++) {
+            if (BonDepots[i] != null && BonDepots[i].getNumTel() == numTel) {
+                bonsClient[nbBonsClient] = BonDepots[i];
+                nbBonsClient++;
+            }
+        }
+        
+        if (nbBonsClient == 0) {
+            System.out.println("Aucun bon de dépôt trouvé pour le numéro de téléphone: " + numTel);
+            return;
+        }
+        
+        // Trier par date (plus récente en dernier)
+        Arrays.sort(bonsClient, 0, nbBonsClient, new Comparator<BonDepot>() {
+            @Override
+            public int compare(BonDepot b1, BonDepot b2) {
+                if (b1 == null && b2 == null) return 0;
+                if (b1 == null) return 1;
+                if (b2 == null) return -1;
+                return b1.getDateDepot().compareTo(b2.getDateDepot());
+            }
+        });
+        
+        // Afficher les bons
+        System.out.println("=== Bons de dépôt pour le client " + numTel + " ===");
+        for (int i = 0; i < nbBonsClient; i++) {
+            if (bonsClient[i] != null) {
+                System.out.println("  Bon n°" + bonsClient[i].getId() + 
+                                 " | Date: " + bonsClient[i].getDateDepot() +
+                                 " | Articles: " + bonsClient[i].getNbArticleDeposes());
+                // Afficher les lignes de dépôt
+                LigneDepot[] lignes = bonsClient[i].getListArticles();
+                for (int j = 0; j < lignes.length; j++) {
+                    if (lignes[j] != null) {
+                        System.out.println("    - " + lignes[j].getNumeroIsbnIssn() + 
+                                         " : " + lignes[j].getExemplaires() + " exemplaire(s)");
+                    }
+                }
+            }
+        }
+        System.out.println();
+    }
+    
+    /**
+     * TP4 : Afficher l'ensemble des bons de dépôt réalisés pour un numéro ISBN ou ISSN précis
+     * et une période donnée
+     * @param numeroIsbnIssn Numéro ISBN ou ISSN à rechercher
+     * @param dateDebut Date de début de la période
+     * @param dateFin Date de fin de la période
+     */
+    public void lister(String numeroIsbnIssn, LocalDate dateDebut, LocalDate dateFin) {
+        System.out.println("=== Bons de dépôt pour " + numeroIsbnIssn + 
+                         " entre " + dateDebut + " et " + dateFin + " ===");
+        
+        boolean trouve = false;
+        
+        // Parcourir tous les bons de dépôt
+        for (int i = 0; i < nbBonDepots; i++) {
+            if (BonDepots[i] != null) {
+                LocalDate dateBon = BonDepots[i].getDateDepot();
+                
+                // Vérifier si la date est dans la période
+                if ((dateBon.isAfter(dateDebut) || dateBon.isEqual(dateDebut)) &&
+                    (dateBon.isBefore(dateFin) || dateBon.isEqual(dateFin))) {
+                    
+                    // Vérifier si le bon contient l'article recherché
+                    LigneDepot[] lignes = BonDepots[i].getListArticles();
+                    for (int j = 0; j < lignes.length; j++) {
+                        if (lignes[j] != null && 
+                            lignes[j].getNumeroIsbnIssn().equals(numeroIsbnIssn)) {
+                            
+                            trouve = true;
+                            System.out.println("  Bon n°" + BonDepots[i].getId() + 
+                                             " | Date: " + dateBon +
+                                             " | Client: " + BonDepots[i].getNumTel() +
+                                             " | Exemplaires: " + lignes[j].getExemplaires());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (!trouve) {
+            System.out.println("Aucun bon de dépôt trouvé pour " + numeroIsbnIssn + 
+                             " dans la période spécifiée.");
+        }
+        System.out.println();
+    }
+    
+    // ========== TP4 - MÉTHODES DE GESTION DES FICHIERS ==========
+    
+    /**
+     * TP4 : Sauvegarder les articles dans un fichier texte
+     * Format: Chaque article sur plusieurs lignes séparées
+     * @param nomFichier Nom du fichier dans lequel sauvegarder
+     * @return true si la sauvegarde a réussi, false sinon
+     */
+    public boolean versFichierArticles(String nomFichier) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(nomFichier, false); // false = écraser le fichier existant
+            
+            for (int i = 0; i < nbArticles; i++) {
+                if (Articles[i] != null) {
+                    String[] lignes = null;
+                    
+                    // Déterminer le type d'article et formater en conséquence
+                    if (Articles[i] instanceof manuel) {
+                        manuel m = (manuel) Articles[i];
+                        lignes = m.versFichier();
+                    } else if (Articles[i] instanceof magazine) {
+                        magazine mag = (magazine) Articles[i];
+                        lignes = mag.versFichier();
+                    } else if (Articles[i] instanceof livre) {
+                        livre l = (livre) Articles[i];
+                        lignes = l.versFichier();
+                    }
+                    
+                    // Écrire chaque ligne
+                    if (lignes != null) {
+                        for (String ligne : lignes) {
+                            if (ligne != null && !ligne.isEmpty()) {
+                                fw.write(ligne);
+                                fw.write(System.lineSeparator());
+                            }
+                        }
+                    }
+                }
+            }
+            
+            fw.close();
+            return true;
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'écriture du fichier: " + e.getMessage());
+            if (fw != null) {
+                try {
+                    fw.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * TP4 : Charger les articles depuis un fichier texte
+     * Format: Chaque article sur plusieurs lignes séparées
+     * @param nomFichier Nom du fichier à lire
+     * @return true si le chargement a réussi, false sinon
+     */
+    public boolean depuisFichierArticles(String nomFichier) {
+        FileReader fr = null;
+        BufferedReader br = null;
+        
+        try {
+            fr = new FileReader(nomFichier);
+            br = new BufferedReader(fr);
+            
+            String ligne;
+            while ((ligne = br.readLine()) != null) {
+                ligne = ligne.trim();
+                if (ligne.isEmpty()) continue;
+                
+                String numero = ligne; // Première ligne : ISBN/ISSN
+                
+                // Lire la ligne suivante
+                String ligne2 = br.readLine();
+                if (ligne2 == null) break;
+                ligne2 = ligne2.trim();
+                
+                // Parser ligne 2 : Description : prix : exemplaires : ...
+                String[] parties = ligne2.split(" : ");
+                if (parties.length < 3) continue;
+                
+                String description = parties[0].trim();
+                double prix = Double.parseDouble(parties[1].trim());
+                int exemplaires = Integer.parseInt(parties[2].trim());
+                
+                // Déterminer le type d'article
+                if (numero.startsWith("ISSN") || numero.startsWith("issn") || numero.matches("\\d{8}")) {
+                    // Magazine: ISSN, Description : prix : exemplaires : périodicité : datePublication
+                    if (parties.length >= 5) {
+                        String periodicite = parties[3].trim();
+                        LocalDate datePub = LocalDate.parse(parties[4].trim());
+                        ajouterMagazine(description, prix, exemplaires, numero, periodicite, datePub);
+                    }
+                } else {
+                    // Livre ou Manuel: ISBN, Description : prix : exemplaires : pages : [matière :]
+                    if (parties.length >= 4) {
+                        int pages = Integer.parseInt(parties[3].trim());
+                        
+                        if (parties.length >= 5 && parties[4].trim().endsWith(":")) {
+                            // Manuel: Description : prix : exemplaires : pages : matière :
+                            String matiere = parties[4].trim().replace(":", "").trim();
+                            // Lire la ligne suivante pour le niveau
+                            String ligne3 = br.readLine();
+                            if (ligne3 != null) {
+                                String niveau = ligne3.trim();
+                                ajouterManuel(description, prix, exemplaires, numero, pages, matiere, niveau);
+                            }
+                        } else {
+                            // Livre: Description : prix : exemplaires : pages
+                            ajouterLivre(description, prix, exemplaires, numero, pages);
+                        }
+                    }
+                }
+            }
+            
+            br.close();
+            fr.close();
+            return true;
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier: " + e.getMessage());
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            return false;
+        } catch (NumberFormatException e) {
+            System.err.println("Erreur de format numérique dans le fichier: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * TP4 : Sauvegarder les bons de dépôt dans un fichier texte
+     * Format: Chaque bon sur plusieurs lignes séparées
+     * @param nomFichier Nom du fichier dans lequel sauvegarder
+     * @return true si la sauvegarde a réussi, false sinon
+     */
+    public boolean versFichierDepots(String nomFichier) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(nomFichier, false); // false = écraser le fichier existant
+            
+            for (int i = 0; i < nbBonDepots; i++) {
+                if (BonDepots[i] != null) {
+                    String[] lignes = BonDepots[i].versFichier();
+                    
+                    // Écrire chaque ligne
+                    for (String ligne : lignes) {
+                        if (ligne != null && !ligne.isEmpty()) {
+                            fw.write(ligne);
+                            fw.write(System.lineSeparator());
+                        }
+                    }
+                }
+            }
+            
+            fw.close();
+            return true;
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'écriture du fichier: " + e.getMessage());
+            if (fw != null) {
+                try {
+                    fw.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * TP4 : Charger les bons de dépôt depuis un fichier texte
+     * Format: Chaque bon sur plusieurs lignes séparées
+     * @param nomFichier Nom du fichier à lire
+     * @return true si le chargement a réussi, false sinon
+     */
+    public boolean depuisFichierDepots(String nomFichier) {
+        FileReader fr = null;
+        BufferedReader br = null;
+        
+        try {
+            fr = new FileReader(nomFichier);
+            br = new BufferedReader(fr);
+            
+            // Lire toutes les lignes dans une liste
+            java.util.List<String> toutesLignes = new java.util.ArrayList<>();
+            String ligne;
+            while ((ligne = br.readLine()) != null) {
+                ligne = ligne.trim();
+                if (!ligne.isEmpty()) {
+                    toutesLignes.add(ligne);
+                }
+            }
+            
+            br.close();
+            fr.close();
+            
+            // Parser les lignes
+            int index = 0;
+            while (index < toutesLignes.size()) {
+                // Première ligne : ID
+                String ligneId = toutesLignes.get(index);
+                if (!ligneId.matches("^\\d+$")) {
+                    index++;
+                    continue;
+                }
+                int id = Integer.parseInt(ligneId);
+                index++;
+                
+                if (index >= toutesLignes.size()) break;
+                
+                // Deuxième ligne : numTel : date : nbArticles
+                String ligne2 = toutesLignes.get(index);
+                if (!ligne2.contains(" : ")) {
+                    index++;
+                    continue;
+                }
+                
+                String[] parties = ligne2.split(" : ");
+                if (parties.length < 3) {
+                    index++;
+                    continue;
+                }
+                
+                int numTel = Integer.parseInt(parties[0].trim());
+                LocalDate date = LocalDate.parse(parties[1].trim());
+                int nbArticles = Integer.parseInt(parties[2].trim());
+                index++;
+                
+                // Parser les lignes de dépôt (lignes suivantes : exemplaires : ISBN/ISSN)
+                LigneDepot[] lignesDepot = new LigneDepot[5];
+                int nbLignes = 0;
+                
+                // Lire les lignes suivantes jusqu'à trouver un nombre (ID bon suivant) ou fin du fichier
+                while (index < toutesLignes.size() && nbLignes < lignesDepot.length) {
+                    String ligneArticle = toutesLignes.get(index);
+                    
+                    // Vérifier si c'est l'ID du bon suivant (uniquement un nombre, sans " : ")
+                    if (ligneArticle.matches("^\\d+$") && !ligneArticle.contains(" : ")) {
+                        // Peut être l'ID du bon suivant (généralement un nombre court)
+                        // Mais peut aussi être un ISBN/ISSN uniquement numérique
+                        // Si cette ligne n'a pas " : ", on considère que c'est l'ID du bon suivant
+                        // et on s'arrête
+                        break;
+                    }
+                    
+                    // Format: exemplaires : ISBN/ISSN
+                    if (ligneArticle.contains(" : ")) {
+                        String[] parts = ligneArticle.split(" : ");
+                        if (parts.length >= 2) {
+                            try {
+                                int exemplaires = Integer.parseInt(parts[0].trim());
+                                String numeroIsbnIssn = parts[1].trim();
+                                lignesDepot[nbLignes] = new LigneDepot(numeroIsbnIssn, exemplaires);
+                                nbLignes++;
+                                index++;
+                            } catch (NumberFormatException e) {
+                                // Format không đúng, bỏ qua
+                                index++;
+                                break;
+                            }
+                        } else {
+                            index++;
+                            break;
+                        }
+                    } else {
+                        // Không phải format đúng, bỏ qua
+                        index++;
+                        break;
+                    }
+                }
+                
+                // Créer le bon de dépôt
+                BonDepot bon = new BonDepot(numTel, date, nbArticles, lignesDepot);
+                
+                // Ajouter au tableau (vérifier qu'il y a de la place)
+                if (nbBonDepots < BonDepots.length) {
+                    BonDepots[nbBonDepots] = bon;
+                    nbBonDepots++;
+                }
+            }
+            
+            return true;
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier: " + e.getMessage());
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException ex) {
+                    System.err.println("Erreur lors de la fermeture du fichier: " + ex.getMessage());
+                }
+            }
+            return false;
+        } catch (NumberFormatException e) {
+            System.err.println("Erreur de format numérique dans le fichier: " + e.getMessage());
+            return false;
+        }
+    }
 
     
 }

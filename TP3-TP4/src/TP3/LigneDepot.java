@@ -40,4 +40,13 @@ public class LigneDepot {
     public void setCodeArticle(String codeArticle){
         this.codeArticle = codeArticle;
     }
+    
+    /**
+     * TP4 : Méthode versFichier pour sauvegarder les informations de la ligne de dépôt dans un fichier
+     * Format: exemplaires : ISBN/ISSN
+     * @return Chaîne de caractères formatée pour l'écriture dans un fichier
+     */
+    public String versFichier() {
+        return exemplaires + " : " + codeArticle;
+    }
 }

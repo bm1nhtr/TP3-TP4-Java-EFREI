@@ -10,7 +10,7 @@
 ## Résultats des tests & État du projet
 
 - **[Résultats des tests TP3](./TP3-TP4/Output/output_TP3.txt)** - Sortie complète des tests du TP3
-- **TP4 :** À venir
+- **[Résultats des tests TP4](./TP3-TP4/Output)** - Les Sorties du TP4
 
 ## Arborescence du projet
 
@@ -18,20 +18,24 @@
 TP3_TP4_BinhMinhTRAN/
 ├── TP3-TP4/
 │   ├── src/
-│   │   └── TP3/
-│   │       ├── article.java          (Classe abstraite mère)
-│   │       ├── livre.java            (Classe héritant de article)
-│   │       ├── manuel.java           (Classe héritant de livre)
-│   │       ├── magazine.java         (Classe héritant de article)
-│   │       ├── LigneDepot.java       (Classe représentant une ligne de dépôt)
-│   │       ├── BonDepot.java         (Classe représentant un bon de dépôt)
-│   │       ├── Etablissement.java    (Classe représentant l'établissement)
-│   │       ├── Main.java             (Classe principale pour les tests)
-│   │       └── Utiles/
-│   │           ├── ConsoleColors.java    (Classe utilitaire pour les couleurs console)
-│   │           └── DualOutputStream.java (Classe utilitaire pour sauvegarder la sortie)
+│   │   ├── TP3/
+│   │   │   ├── article.java          (Classe abstraite mère)
+│   │   │   ├── livre.java            (Classe héritant de article)
+│   │   │   ├── manuel.java           (Classe héritant de livre)
+│   │   │   ├── magazine.java         (Classe héritant de article)
+│   │   │   ├── LigneDepot.java       (Classe représentant une ligne de dépôt)
+│   │   │   ├── BonDepot.java         (Classe représentant un bon de dépôt)
+│   │   │   ├── Etablissement.java    (Classe représentant l'établissement)
+│   │   │   ├── Main.java             (Classe principale pour les tests TP3)
+│   │   │   └── Utiles/
+│   │   │       ├── ConsoleColors.java    (Classe utilitaire pour les couleurs console)
+│   │   │       └── DualOutputStream.java  (Classe utilitaire pour sauvegarder la sortie)
+│   │   └── TP4/
+│   │       └── Main.java             (Classe principale pour TP4 - Application interactive)
 │   └── Output/
-│       └── output_TP3.txt            (Résultats des tests TP3)
+│       ├── output_TP3.txt            (Résultats des tests TP3)
+│       ├── articles_TP4.txt           (Fichier de sauvegarde des articles TP4)
+│       └── depots_TP4.txt             (Fichier de sauvegarde des bons de dépôt TP4)
 ├── SujetTP3&4.pdf
 └── README.md
 ```

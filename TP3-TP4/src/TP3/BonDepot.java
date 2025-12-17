@@ -99,5 +99,39 @@ public class BonDepot {
         return false; // Tableau plein
     }
     
+    /**
+     * TP4 : Méthode versFichier pour sauvegarder les informations du bon de dépôt dans un fichier
+     * Format multi-lignes:
+     * Ligne 1: ID
+     * Ligne 2: numTel : date : nbArticles
+     * Ligne 3+: exemplaires : ISBN/ISSN (une ligne par article)
+     * @return Tableau de chaînes de caractères, chaque élément est une ligne
+     */
+    public String[] versFichier() {
+        // Compter le nombre de lignes de dépôt non nulles
+        int nbLignes = 0;
+        for (int i = 0; i < listArticles.length; i++) {
+            if (listArticles[i] != null) {
+                nbLignes++;
+            }
+        }
+        
+        // Créer le tableau: 1 ligne pour ID + 1 ligne pour numTel/date/nbArticles + nbLignes pour les articles
+        String[] lignes = new String[2 + nbLignes];
+        lignes[0] = String.valueOf(id);
+        lignes[1] = numTel + " : " + dateDepot + " : " + nbArticleDeposes;
+        
+        // Ajouter toutes les lignes de dépôt
+        int index = 2;
+        for (int i = 0; i < listArticles.length; i++) {
+            if (listArticles[i] != null) {
+                lignes[index] = listArticles[i].versFichier();
+                index++;
+            }
+        }
+        
+        return lignes;
+    }
+    
     
 }

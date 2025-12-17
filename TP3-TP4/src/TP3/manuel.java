@@ -45,4 +45,21 @@ public class manuel extends livre {
     // getNumero est déjà défini dans Livre (retourne l'isbn).
     // On peut le redéfinir ici si on veut être explicite, mais ce n'est pas obligatoire.
     
+    /**
+     * TP4 : Méthode versFichier pour sauvegarder les informations du manuel dans un fichier
+     * Format multi-lignes:
+     * Ligne 1: ISBN
+     * Ligne 2: Description : prix : exemplaires : pages : matière :
+     * Ligne 3: niveau
+     * @return Tableau de chaînes de caractères, chaque élément est une ligne
+     */
+    public String[] versFichier() {
+        String[] lignes = new String[3];
+        lignes[0] = getIsbn();
+        lignes[1] = getDescription() + " : " + getPrixInitial() + " : " + 
+                    getNbExemplaires() + " : " + getNbPages() + " : " + matiere + " :";
+        lignes[2] = niveau;
+        return lignes;
+    }
+    
 }
